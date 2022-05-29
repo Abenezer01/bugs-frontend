@@ -1,35 +1,62 @@
 import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 import { useSelector } from 'react-redux';
-import {useEffect} from 'react'
-import {useDispatch} from 'react-redux'
-import { loadBugs } from './store/bugsReducer';
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { loadBugs,resolveBug } from './store/bugSlice';
+import { map } from 'lodash'
+import AddBug from './components/addbug'
 function App() {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(loadBugs())
   }, [])
-  const bugs=useSelector((state)=>state.bugs)
+  const bugs = useSelector((state) => state.bugs)
   useEffect(() => {
-    console.log('bugs',bugs)
+    console.log('bugs', bugs)
   }, [bugs])
-  
+  const [isBugAdd, setIsBugAdd] = useState(false)
+  const toggleAddBug = () => {
+    console.log('is working')
+    setIsBugAdd(!isBugAdd)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App m-5">
+      <button className='btn btn-sm btn-primary mb-2' onClick={toggleAddBug}>
+        {isBugAdd ? 'Cancel' : 'Add'}
+      </button>
+      {!isBugAdd ?
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Resolved</th>
+              <th>Resolve by</th>
+            </tr>
+          </thead>
+          <tbody>
+            {map(bugs.list, (bug, i) => (
+              <tr>
+                <td>
+                  {bug.name}
+                </td>
+                <td>
+                  {bug.description}
+                </td>
+                <td>
+                  {bug.resolved?'true':
+                  <button onClick={()=>{dispatch(resolveBug(bug.id))}}>Resolve</button>}
+                </td>
+                <td>
+                  {bug.userId}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table> :
+        <AddBug toggleAddBug={toggleAddBug}/>
+      }
     </div>
   );
 }

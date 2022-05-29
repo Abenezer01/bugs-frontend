@@ -1,8 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit'
-import bugsReducer from "./bugsReducer";
 import ApiMiddleware from "./middleware/api";
+import rootReducer from "./rootReducer";
 const store=configureStore({
-    reducer:bugsReducer,
-    middleware:(getDefaultMiddleware)=>[...getDefaultMiddleware(),ApiMiddleware]
-})
+    reducer:rootReducer,
+    middleware: (getDefaultMiddleware) => [
+        ...getDefaultMiddleware(),
+        ApiMiddleware
+      ],})
 export default store

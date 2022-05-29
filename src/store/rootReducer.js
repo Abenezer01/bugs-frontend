@@ -1,5 +1,5 @@
-const { combineReducers } = require("redux");
-import bugsReducer from './bugsReducer'
+import { combineReducers } from 'redux'
+import bugsReducer from './bugSlice'
 const rootReducer=combineReducers({
     bugs:bugsReducer
 })

@@ -1,15 +1,14 @@
 import axios from 'axios'
 
 import { apiCallBegan, apiCallSuccess, apiCallFailed } from "../actionCreator/api"
-const ApiMiddleware=(getState,dispatch)=>next=>async action=>{
-    console.log('action',action)
+const ApiMiddleware=({dispatch,getState})=>next=>async action=>{
     if (action.type !== apiCallBegan.type) return next(action);
     next(action)
-    const {onStart,onError,onSuccess,method,data,url}=action.payload
+    const {onStart,onError,onSuccess,method,data,onHistory,url}=action.payload
     if(onStart) dispatch({type:onStart})
     try {
         const response=await axios({
-            baseURL:'http://localhost:9001',
+            baseURL:'http://localhost:9001/api',
             method,
             url,
             data
@@ -27,6 +26,9 @@ const ApiMiddleware=(getState,dispatch)=>next=>async action=>{
                 type:onSuccess,
                 payload:response.data
             })
+        }
+        if(onHistory){
+            onHistory()
         }
     } catch (error) {
         //general error response action

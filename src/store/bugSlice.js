@@ -36,16 +36,15 @@ const bugsSlice = createSlice({
 });
 
 export default bugsSlice.reducer
-const {bugAdded,bugReceived,bugRequested,bugRequestFailed}=bugsSlice.actions
-const url='/url'
+const {bugAdded,bugReceived,bugRequested,bugRequestFailed,bugResolved}=bugsSlice.actions
+const url='/bugs'
 //action creator by functions
 
-export const loadBugs=()=>(getState,dispatch)=>{
-    console.log(getState())
-
-    const lastFetch=getState().bugs.lastFetch
-    if(moment().diff(moment(lastFetch),'minute'))return 
-    return dispatch(apiCallBegan({
+export const loadBugs=()=>(dispatch,getState)=>{
+  console.log(getState())
+    const {lastFetch}=getState().bugs
+    if(moment().diff(moment(lastFetch),'minute')>10)return 
+    dispatch(apiCallBegan({
         url,
         method:'get',
         onStart:bugRequested.type,
@@ -53,9 +52,17 @@ export const loadBugs=()=>(getState,dispatch)=>{
         onSuccess:bugReceived.type
     }))
 }
-export const addBug=(data)=>apiCallBegan({
+export const addBug=(data,onHistory=null)=>apiCallBegan({
     url,
     method:'post',
+    onHistory,
     data:data,
     onSuccess:bugAdded.type   
+})
+export const resolveBug=(id,onHistory=null)=>apiCallBegan({
+  url:url+'/'+id,
+  method:'patch',
+  data:{resolved:true},
+  onSuccess:bugResolved,
+  onHistory
 })

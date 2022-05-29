@@ -5,13 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import configStore from './store/configStore'
 import {Provider} from 'react-redux'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import SuccessPage from './components/success';
 const store=configStore
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-  <Provider store={store}>
-    <App />
+  <Provider store={store}>  
+  <BrowserRouter>
+
+        <Routes>
+          <Route exact path="/" element={<App />}/>
+          <Route exact path="/success" element={<SuccessPage/>}/>
+
+        </Routes>
+  </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );
