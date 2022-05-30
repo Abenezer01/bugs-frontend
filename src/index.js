@@ -7,17 +7,21 @@ import configStore from './store/configStore'
 import {Provider} from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SuccessPage from './components/success';
+import CartsPage from './components/carts'
+import Navbar from './components/navbar'
 const store=configStore
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
   <Provider store={store}>  
+  <Navbar/>
   <BrowserRouter>
-
+    
         <Routes>
           <Route exact path="/" element={<App />}/>
           <Route exact path="/success" element={<SuccessPage/>}/>
+          <Route exact path="/carts" element={<CartsPage/>}/>
 
         </Routes>
   </BrowserRouter>
